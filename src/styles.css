@@ -14,3 +14,26 @@
 .main table thead {
   font-weight: bold;
 }
+
+.botao1 {
+  background-color: #0E6DFD;
+  color: #F4F4F4;
+  border: none;
+  border-radius: 0%;
+  font-weight: bold;
+}
+
+.tabela {
+  font-weight: bold;
+}
+
+.buscar{
+}
+
+.fa-trash-can{
+  background-color: #FE0000;
+}
+
+.fa-pen-to-square{
+
+}

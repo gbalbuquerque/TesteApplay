@@ -1,5 +1,4 @@
 //ler do local storage aqui
-//teste
 let candidatos = [
   { id: "1", cpf: "42604610876", nome: "Lucas Vieira Dias", celular: "11957770782", email: "lvdias98@gmail.com", sexo: "Masculino", nascimento: "01/12/1998", skills: { html: true, css: true, js: true } },
   { id: "2", cpf: "42604610876", nome: "Nelson Santana", celular: "11957770782", email: "lvdias98@gmail.com", sexo: "Masculino", nascimento: "01/12/1998", skills: { html: true, css: true, js: true } },
@@ -113,7 +112,11 @@ function listarCandidatos() {
 
     // Funcionalidades botão editar
     let botaoEditar = document.createElement("button");
-    botaoEditar.innerHTML = 'Editar';
+    let iconeEditar = document.createElement("i");
+    iconeEditar.className = "fa-solid fa-pen-to-square";
+
+    botaoEditar.appendChild(iconeEditar);
+    botaoEditar.innerHTML += '';
     botaoEditar.onclick = function () {
       console.log('editar');
       abrirModal(candidato);
@@ -121,7 +124,10 @@ function listarCandidatos() {
 
     // Funcionalidades botão remover
     let botaoRemover = document.createElement("button");
-    botaoRemover.innerHTML = 'Remover';
+    let iconeRemover = document.createElement("i");
+    iconeRemover.className = "fa-solid fa-trash-can";
+
+    botaoRemover.appendChild(iconeRemover);
     botaoRemover.onclick = function () {
       alert('Erro ao remover!');
     }
@@ -136,6 +142,32 @@ function listarCandidatos() {
     if(candidato.skills.js){
       arrSkills.push('JS');
     }
+
+    //mascara do cpf
+    const cpf = document.querySelector('#cpf');
+
+    cpf.addEventListener('keypress',() => {
+      let tamanhoInputcpf = cpf.value.length;
+      if (tamanhoInputcpf === 3 || tamanhoInputcpf === 7 ){
+        cpf.value += '.';
+      }else if(tamanhoInputcpf == 11){
+        cpf.value += '-';
+      }
+    })
+
+    //mascara do celular
+    const celular = document.querySelector('#celular');
+
+    celular.addEventListener('keypress',()=> {
+      let tamanhoInputCelular = celular.value.length;
+      if(tamanhoInputCelular === 0){
+        celular.value += '(';
+      }else if(tamanhoInputCelular === 3){
+        celular.value += ') ';
+      }else if(tamanhoInputCelular === 10){
+        celular.value += '-';
+      }
+    })
 
     colunaCpf.appendChild(document.createTextNode(candidato.cpf));
     colunaNome.appendChild(document.createTextNode(candidato.nome));
@@ -172,3 +204,4 @@ $(document).ready(function () {
     });
   });
 });
+
