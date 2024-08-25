@@ -1,8 +1,5 @@
 //ler do local storage aqui
-let candidatos = [
-  { id: "1", cpf: "42604610876", nome: "Lucas Vieira Dias", celular: "11957770782", email: "lvdias98@gmail.com", sexo: "Masculino", nascimento: "01/12/1998", skills: { html: true, css: true, js: true } },
-  { id: "2", cpf: "42604610876", nome: "Nelson Santana", celular: "11957770782", email: "lvdias98@gmail.com", sexo: "Masculino", nascimento: "01/12/1998", skills: { html: true, css: true, js: true } },
-];
+let candidatos =  JSON.parse(localStorage.getItem('candidatos')) || [];
 
 function abrirModal(candidato) {
   if (candidato) {
@@ -88,6 +85,7 @@ function salvar() {
   }
 
   //salvar a lista de canditatos atualizada no local storage
+  localStorage.setItem('candidatos', JSON.stringify(candidatos));
 
   fecharModal();
   listarCandidatos();
@@ -112,11 +110,13 @@ function listarCandidatos() {
 
     // Funcionalidades botão editar
     let botaoEditar = document.createElement("button");
+    botaoEditar.classList.add('editar');
+
     let iconeEditar = document.createElement("i");
     iconeEditar.className = "fa-solid fa-pen-to-square";
+    botaoEditar.style.border = "none";
 
-    botaoEditar.appendChild(iconeEditar);
-    botaoEditar.innerHTML += '';
+    botaoEditar.appendChild(iconeEditar); 
     botaoEditar.onclick = function () {
       console.log('editar');
       abrirModal(candidato);
@@ -124,13 +124,35 @@ function listarCandidatos() {
 
     // Funcionalidades botão remover
     let botaoRemover = document.createElement("button");
+    botaoRemover.classList.add('editar');
+
     let iconeRemover = document.createElement("i");
     iconeRemover.className = "fa-solid fa-trash-can";
+    
+
 
     botaoRemover.appendChild(iconeRemover);
     botaoRemover.onclick = function () {
-      alert('Erro ao remover!');
+      removerCandidato();
+      // Swal.fire({
+      //   title: 'Tem certeza?',
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#3085d6',
+      //   cancelButtonColor: '#d33',
+      //   confirmButtonText: 'Sim, remover!',
+      //   cancelButtonText: 'Cancelar'
+      // }).then((result)=> {
+      //   if(result.isConfirmed){
+      //     Swal.fire(
+      //       'Removido!',
+      //           'O candidato foi removido com sucesso.',
+      //           'success'
+      //     );
+      //   }
+      // });
     }
+    
 
     let arrSkills = [];
     if(candidato.skills.html){
@@ -191,6 +213,12 @@ function listarCandidatos() {
 
     tabela.appendChild(linha);
   }
+}
+
+function removerCandidato(id) {
+  candidatos = candidatos.filter(candidato => candidato.id !== id);
+  localStorage.setItem('candidatos', JSON.stringify(candidatos));
+  listarCandidatos();
 }
 
 listarCandidatos();
