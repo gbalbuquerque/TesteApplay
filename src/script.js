@@ -133,24 +133,25 @@ function listarCandidatos() {
 
     botaoRemover.appendChild(iconeRemover);
     botaoRemover.onclick = function () {
-      removerCandidato();
-      // Swal.fire({
-      //   title: 'Tem certeza?',
-      //   icon: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3085d6',
-      //   cancelButtonColor: '#d33',
-      //   confirmButtonText: 'Sim, remover!',
-      //   cancelButtonText: 'Cancelar'
-      // }).then((result)=> {
-      //   if(result.isConfirmed){
-      //     Swal.fire(
-      //       'Removido!',
-      //           'O candidato foi removido com sucesso.',
-      //           'success'
-      //     );
-      //   }
-      // });
+      
+      Swal.fire({
+        title: 'Tem certeza?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, remover!',
+        cancelButtonText: 'Cancelar'
+      }).then((result)=> {
+        if(result.isConfirmed){
+          removerCandidato(candidato.id);
+          Swal.fire(
+            'Removido!',
+                'O candidato foi removido com sucesso.',
+                'success'
+          );
+        }
+      });
     }
     
 
