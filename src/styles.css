@@ -5,18 +5,11 @@
 
 input {
   padding-left: 10px;
-  padding-top: 8px;
+  padding-top: 10px;
   border: -1px #b8b8b8;
   border-radius: 5px;
   border: groove;
-}
-
-input[type=date]::-webkit-datetime-edit{
-  color: transparent;
-}
-
-input[type=date]:focus::-webkit-datetime-edit{
-  color: black;
+  font-size: 20px;
 }
 
 .main {
@@ -98,7 +91,7 @@ button.editar {
 ::placeholder {
   text-align: top;
   font-size: 15px;
-  position: absolute;
+  position:  absolute;
   top: 5px;
   left: 10px;
 }

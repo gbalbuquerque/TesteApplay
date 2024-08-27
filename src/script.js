@@ -54,7 +54,61 @@ function salvar() {
 
   // Fazer validações aqui
 
-  // Validação dos Campos
+  //validação do cpf
+  function validarCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos
+    if (cpf.length !== 11) return false;
+
+    // Verificação de CPFs inválidos conhecidos
+    if (/^(\d)\1+$/.test(cpf)) return false;
+
+    let soma, resto;
+    soma = 0;
+
+    // Valida o primeiro dígito verificador
+    for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+    soma = 0;
+
+    // Valida o segundo dígito verificador
+    for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+  }
+
+  // Função para verificar se CPF é único
+  function cpfUnico(cpf) {
+    return !candidatos.some(candidato => candidato.cpf === cpf);
+  }
+
+  // Função para verificar se o nome é completo
+  function nomeCompleto(nome) {
+    return nome.trim().split(' ').length > 1;
+  }
+
+  // Função para verificar idade mínima (maior que 16 anos)
+  function idadeMinima(dataNascimento) {
+    const dataNasc = new Date(dataNascimento);
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - dataNasc.getFullYear();
+    const mesAtual = hoje.getMonth() - dataNasc.getMonth();
+
+    if (mesAtual < 0 || (mesAtual === 0 && hoje.getDate() < dataNasc.getDate())) {
+      idade--;
+    }
+
+    // Verifica se a idade é maior que 16 anos
+    return idade > 16;
+  }
+
+
+  // Validação dos Campos Preenchidos + alerta
   if (!cpf || !nome || !celular || !email || !nascimento) {
     Swal.fire({
       icon: 'error',
@@ -64,6 +118,56 @@ function salvar() {
     return;
   }
 
+  // Validação do CPF + Alerta
+  if (!validarCPF(cpf)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'CPF inválido',
+    });
+    return;
+  }
+
+  if (!cpfUnico(cpf) && id === '') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'CPF já cadastrado'
+    });
+    return;
+  }
+
+  // Validação do Sobrenome
+  if (!nomeCompleto(nome)) {
+    swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'Por favor, insira o seu sobrenome',
+    });
+    return;
+  }
+
+  // Validação da idade mínima
+  if (!idadeMinima(nascimento)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'O candidato deve ter mais de 16 anos de idade.',
+    });
+    return;
+  }
+  
+  if (!skillHtml && !skillCss && !skillJs) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'O candidato deve ter pelo menos uma habilidade.',
+    });
+    return;
+  }
+
+
+
   // Formulário para checar o e-mail
   let formulario = document.getElementById("candidatoForm");
   if (!formulario.checkValidity()) {
@@ -71,6 +175,8 @@ function salvar() {
     //retorna se nao foi preenchido corretamente
     return;
   }
+
+
 
   // Fazer validações aqui
 
@@ -153,6 +259,7 @@ function listarCandidatos() {
       Swal.fire({
         title: 'Tem certeza?',
         icon: 'warning',
+        text: 'O candidato será apagado permanentemente!',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
