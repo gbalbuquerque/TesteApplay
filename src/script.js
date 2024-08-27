@@ -1,5 +1,5 @@
 //ler do local storage aqui
-let candidatos =  JSON.parse(localStorage.getItem('candidatos')) || [];
+let candidatos = JSON.parse(localStorage.getItem('candidatos')) || [];
 
 function abrirModal(candidato) {
   if (candidato) {
@@ -8,9 +8,9 @@ function abrirModal(candidato) {
     document.getElementById("nome").value = candidato.nome;
     document.getElementById("celular").value = candidato.celular;
     document.getElementById("email").value = candidato.email;
-    if(candidato.sexo=='Masculino'){
+    if (candidato.sexo == 'Masculino') {
       document.getElementById("sexoMasculino").checked = true;
-    }else{
+    } else {
       document.getElementById("sexoFeminino").checked = true;
     }
     document.getElementById("nascimento").value = candidato.nascimento.split('/').reverse().join('-');
@@ -54,15 +54,33 @@ function salvar() {
 
   // Fazer validações aqui
 
+  // Validação dos Campos
+  if (!cpf || !nome || !celular || !email || !nascimento) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'Por favor, preencha todos os campos obrigatórios.',
+    });
+    return;
+  }
+
+  // Formulário para checar o e-mail
+  let formulario = document.getElementById("candidatoForm");
+  if (!formulario.checkValidity()) {
+    formulario.reportValidity();
+    //retorna se nao foi preenchido corretamente
+    return;
+  }
+
   // Fazer validações aqui
 
   let candidato = {
-    id: id!=''?id:new Date().getTime(),
+    id: id != '' ? id : new Date().getTime(),
     cpf: cpf,
     nome: nome,
     celular: celular,
     email: email,
-    sexo: sexo?'Masculino':'Feminino',
+    sexo: sexo ? 'Masculino' : 'Feminino',
     nascimento: nascimento,
     skills: {
       html: skillHtml,
@@ -71,8 +89,8 @@ function salvar() {
     }
   };
 
-  if(id!=''){
-    let checkCandidato = candidatos.find(e=>e.id == candidato.id);
+  if (id != '') {
+    let checkCandidato = candidatos.find(e => e.id == candidato.id);
     checkCandidato.cpf = candidato.cpf;
     checkCandidato.nome = candidato.nome;
     checkCandidato.celular = candidato.celular;
@@ -80,7 +98,7 @@ function salvar() {
     checkCandidato.sexo = candidato.sexo;
     checkCandidato.nascimento = candidato.nascimento;
     checkCandidato.skills = candidato.skills;
-  }else{
+  } else {
     candidatos.push(candidato);
   }
 
@@ -116,7 +134,7 @@ function listarCandidatos() {
     iconeEditar.className = "fa-solid fa-pen-to-square";
     botaoEditar.style.border = "none";
 
-    botaoEditar.appendChild(iconeEditar); 
+    botaoEditar.appendChild(iconeEditar);
     botaoEditar.onclick = function () {
       console.log('editar');
       abrirModal(candidato);
@@ -128,12 +146,10 @@ function listarCandidatos() {
 
     let iconeRemover = document.createElement("i");
     iconeRemover.className = "fa-solid fa-trash-can";
-    
-
 
     botaoRemover.appendChild(iconeRemover);
     botaoRemover.onclick = function () {
-      
+
       Swal.fire({
         title: 'Tem certeza?',
         icon: 'warning',
@@ -142,38 +158,38 @@ function listarCandidatos() {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sim, remover!',
         cancelButtonText: 'Cancelar'
-      }).then((result)=> {
-        if(result.isConfirmed){
+      }).then((result) => {
+        if (result.isConfirmed) {
           removerCandidato(candidato.id);
           Swal.fire(
             'Removido!',
-                'O candidato foi removido com sucesso.',
-                'success'
+            'O candidato foi removido com sucesso.',
+            'success'
           );
         }
       });
     }
-    
+
 
     let arrSkills = [];
-    if(candidato.skills.html){
+    if (candidato.skills.html) {
       arrSkills.push('HTML');
     }
-    if(candidato.skills.css){
+    if (candidato.skills.css) {
       arrSkills.push('CSS');
     }
-    if(candidato.skills.js){
+    if (candidato.skills.js) {
       arrSkills.push('JS');
     }
 
     //mascara do cpf
     const cpf = document.querySelector('#cpf');
 
-    cpf.addEventListener('keypress',() => {
+    cpf.addEventListener('keypress', () => {
       let tamanhoInputcpf = cpf.value.length;
-      if (tamanhoInputcpf === 3 || tamanhoInputcpf === 7 ){
+      if (tamanhoInputcpf === 3 || tamanhoInputcpf === 7) {
         cpf.value += '.';
-      }else if(tamanhoInputcpf == 11){
+      } else if (tamanhoInputcpf == 11) {
         cpf.value += '-';
       }
     })
@@ -181,13 +197,13 @@ function listarCandidatos() {
     //mascara do celular
     const celular = document.querySelector('#celular');
 
-    celular.addEventListener('keypress',()=> {
+    celular.addEventListener('keypress', () => {
       let tamanhoInputCelular = celular.value.length;
-      if(tamanhoInputCelular === 0){
+      if (tamanhoInputCelular === 0) {
         celular.value += '(';
-      }else if(tamanhoInputCelular === 3){
+      } else if (tamanhoInputCelular === 3) {
         celular.value += ') ';
-      }else if(tamanhoInputCelular === 10){
+      } else if (tamanhoInputCelular === 10) {
         celular.value += '-';
       }
     })
@@ -211,11 +227,11 @@ function listarCandidatos() {
     linha.appendChild(colunaSkills);
     linha.appendChild(colunaEditar);
     linha.appendChild(colunaRemover);
-
     tabela.appendChild(linha);
   }
 }
 
+//Função para remover os Candidatos
 function removerCandidato(id) {
   candidatos = candidatos.filter(candidato => candidato.id !== id);
   localStorage.setItem('candidatos', JSON.stringify(candidatos));
